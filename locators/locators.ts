@@ -18,7 +18,8 @@ export const Locator={
         combobox: 'combobox',
         menuitem:'menuitem',
         list:'list',
-        radio:'radio'
+        radio:'radio',
+    
     },
 
     login:{
@@ -37,7 +38,7 @@ export const Locator={
     },
 
     serviceNow:{
-        mobileText: 'Cell phones to meet your business needs',
+        category: 'h2',
         mobileModelText: 'Request for Apple iPhone 13 pro',
         mainFrame :'#gsft_main',
         replacement_Text : 'No',

@@ -145,6 +145,7 @@ export default class ElementHandler{
         let method
         let ele:Locator 
         let parent
+        
 
         // Locator Chaining: Uses the provided parent locator or frame to find elements within a specific scope; otherwise, searches from the current page.
         if(parent1){
@@ -164,16 +165,16 @@ export default class ElementHandler{
             switch(method){
                 case "Role":
                     // Locate the element by its ARIA role and accessible name.
-                    ele =   parent.getByRole(locMethod as role,{name:name})
-                    console.log(await ele.count());
+                    ele =   parent.getByRole(locMethod as role,{name:name, exact : true})
+                    /*console.log(await ele.count());
                     let count = await ele.count()
                     if(count > 1){
                         ele =  parent.getByRole(locMethod as role,{name:name, exact: true})
-                    }
+                    }*/
                     break
                 case "Text":
                     // Locate the element using its visible text.
-                    ele =  parent.getByText(locMethod as string)
+                    ele =  parent.getByText(locMethod as string, {exact : true})
                     break
                 case "Title":
                     // Locate the element using its title attribute.
@@ -207,7 +208,7 @@ export default class ElementHandler{
         }  
 
         // Return the locator for further actions or assertions.
-        return ele
+        return ele;
     }
 
     /**
@@ -216,6 +217,10 @@ export default class ElementHandler{
      */
     findFrame(locator:string){
         return this.page.frameLocator(locator)
+    }
+
+    filterElement(element:Locator,text:string){
+         return element.filter({hasText : text})
     }
 
     //Retrieves and returns the current page title.

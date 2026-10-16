@@ -5,6 +5,7 @@ import {test} from "../helper/customeFixture"
 // Import login credentials and app_URL from the test data file.
 import users from "../test-data/users.json"
 import appUrl from "../test-data/appUrl.json"
+import item from "../test-data/items.json"
 
 // Define a test scenario for ordering a mobile through ServiceNow.
 test("Service Now : Ordering a mobile", async({login,home,serviceNow}) =>{
@@ -22,10 +23,10 @@ test("Service Now : Ordering a mobile", async({login,home,serviceNow}) =>{
     await home.openServiceCatalog("service catalog")
 
     // Select the mobile product and submit the order.
-    await serviceNow.addToCart()
+    await serviceNow.addToCart(item.category,item.item)
 
     // Verify the order confirmation and summary details.
-    await serviceNow.verifyOrderSummary()
+    await serviceNow.verifyOrderSummary(item.item,item.quantity)
 
     // Capture a full-page screenshot for evidence.
     await serviceNow.takeScreenshot()
