@@ -14,8 +14,9 @@ test("To create barear token", async({request}) =>{
         form:{
 
         "grant_type":"password",
-        "client_id":"136ca5ad46e549ef8801da4c22cede5a",
-        "client_secret":"aeyN}+wn`aevIaHJ]9(5r4y0fy,mu5jc",
+            //Update the client id and client secret before executing
+        "client_id":"",
+        "client_secret":"",
         "username":"admin",
         "password":"Qf=Nj6$ja1FE"
 
