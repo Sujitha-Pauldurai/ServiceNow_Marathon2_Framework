@@ -1,4 +1,4 @@
 {
-    "client_id":"136ca5ad46e549ef8801da4c22cede5a",
-    "client_secret":"aeyN}+wn`aevIaHJ]9(5r4y0fy,mu5jc"
+    "client_id":${{secret.CLIENT_ID}},
+    "client_secret":${{secret.CLIENT_SECRET}}
 }
