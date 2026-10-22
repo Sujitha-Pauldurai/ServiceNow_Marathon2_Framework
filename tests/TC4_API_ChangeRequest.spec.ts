@@ -1,6 +1,25 @@
 import {test,expect, request} from "@playwright/test"
 
+import dotenv from "dotenv"
+
 let tokenValue:any, tokenType:string , systemId:any
+
+let user= process.env.user || 'users' 
+
+let appClient = process.env.client || 'appClient'
+
+//config the environment file Details 
+dotenv.config({path:`test-data/${user}.env`,override: true})
+
+const username = process.env.username!
+const password = process.env.password!
+
+dotenv.config({path:`test-data/${appClient}.env`,override: true})
+
+clientID = process.env.client_id!
+clientSecret = process.env.client_secret
+
+
 
 test.describe.serial("Execute test in serial mode",async() =>{
 
@@ -15,10 +34,10 @@ test("To create barear token", async({request}) =>{
 
         "grant_type":"password",
             //Update the client id and client secret before executing
-        "client_id":"",
-        "client_secret":"",
-        "username":"admin",
-        "password":"Qf=Nj6$ja1FE"
+        "client_id":clientID,
+        "client_secret":clientSecret,
+        "username":username,
+        "password":password
 
         }
     })  
