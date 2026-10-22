@@ -3,7 +3,7 @@ import { LoginPage } from "../pages/login";
 import {test} from "../helper/customeFixture"
 
 // Import login credentials and app_URL from the test data file.
-import users from "../test-data/users.json"
+import users from "../test-data/users.json" // users file is not added in Git since it has confidential data
 import appUrl from "../test-data/appUrl.json"
 import item from "../test-data/items.json"
 
