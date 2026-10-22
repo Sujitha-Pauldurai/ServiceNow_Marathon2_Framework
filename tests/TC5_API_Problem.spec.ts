@@ -1,0 +1,140 @@
+import {test,expect, request} from "@playwright/test"
+import client from "../test-data/apiClient.json"
+
+let tokenValue:any, tokenType:string , systemId:any
+
+test.describe.serial("Execute test in serial mode",async() =>{
+
+test("To create barear token", async({request}) =>{
+
+    let resBody = await request.post('https://dev400114.service-now.com/oauth_token.do',{
+        headers:{
+        "Content-Type" :"application/x-www-form-urlencoded"
+
+        },
+        form:{
+
+        "grant_type":"password",
+        "client_id":client.client_id,
+        "client_secret":client.client_secret,
+        "username":"admin",
+        "password":"Qf=Nj6$ja1FE"
+
+        }
+    })  
+    
+    //deserialization-> json to obj
+    let tokenRes=await resBody.json()
+    console.log(tokenRes)
+
+    expect(resBody.status()).toBe(200)      
+    console.log(resBody.status());
+
+    expect(resBody.statusText()).toBe("OK")
+    console.log(resBody.statusText());
+
+    tokenType=tokenRes.token_type
+    console.log(tokenType);
+
+    tokenValue = tokenRes.access_token
+    console.log(tokenValue);
+    
+    
+})
+
+test("Create a Problem ",async({request}) => {
+
+    console.log(`${tokenType} ${tokenValue}`);
+    
+
+    let resBody =await request.post('https://dev400114.service-now.com/api/now/table/problem',{
+        headers:{
+            "Content-Type" : "application/json",
+            "Authorization" : `${tokenType} ${tokenValue}`
+        },
+        data:{
+            "short_description": "Problem in Onboarding",
+            "description": "Onboarding issue of new customer",
+            "comments": "Updated via Playwright API request",
+            "work_notes": "Checked mail server logs",
+            "subcategory": "Problem",
+            "impact": "3",
+            "urgency": "1"
+        }
+    })
+
+    let response = await resBody.json()
+    console.log("New  Problem Details: \n",response);
+
+expect(resBody.status()).toBe(201)
+console.log(resBody.status())
+
+expect(resBody.statusText()).toBe('Created')
+console.log(resBody.statusText())
+
+systemId=response.result.sys_id
+console.log(systemId);
+
+    
+
+})
+
+test("Get the created  Problem details",async({request})=>{
+
+    let resBody =await request.get(`https://dev400114.service-now.com/api/now/table/problem/${systemId}`,{
+        headers:{
+            "Content-Type" : "application/json",
+            "Authorization" : `${tokenType} ${tokenValue}`
+        }
+    })
+
+     let response = await resBody.json()
+    console.log("Problem Details: \n",response);
+
+    expect(resBody.status()).toBe(200)
+    console.log(resBody.status())
+
+    expect(resBody.statusText()).toBe('OK')
+    console.log(resBody.statusText())
+
+})
+
+test("Update a Problem Details",async({request})=>{
+    let resBody = await request.patch(`https://dev400114.service-now.com/api/now/table/problem/${systemId}`,{
+        headers:{
+            "Content-Type" : "application/json",
+            "Authorization" : `${tokenType} ${tokenValue}`
+        },
+        data:{
+            "short_description": "update Onboarding issue - PW API",
+            "description": "Onboarding of new customer is still pening - PW API",
+            "comments": "Updated via PW - PATCH"
+        }
+    })
+    let response = await resBody.json()
+    console.log("Problem Details: \n",response);
+
+    expect(resBody.status()).toBe(200)
+    console.log(resBody.status())
+
+    expect(resBody.statusText()).toBe('OK')
+    console.log(resBody.statusText())
+
+})
+
+test("Delete the  Problem",async({request})=>{
+    let resBody = await request.delete(`https://dev400114.service-now.com/api/now/table/problem/${systemId}`,{
+        headers:{
+            "Content-Type" : "application/json",
+            "Authorization" : `${tokenType} ${tokenValue}`
+        }
+    })
+    expect(resBody.status()).toBe(204)
+    console.log(resBody.status())
+
+    expect(resBody.statusText()).toBe('No Content')
+    console.log(resBody.statusText())
+})
+
+})
+
