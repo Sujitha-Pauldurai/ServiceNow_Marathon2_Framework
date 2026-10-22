@@ -1,10 +1,32 @@
 import {test,expect, request} from "@playwright/test"
 
+import dotenv from "dotenv"
+
+
+
+let user= process.env.user || 'users' 
+
+let appClient = process.env.client || 'appClient'
+
+//config the environment file Details 
+dotenv.config({path:`test-data/${user}.env`,override: true})
+
+const username = process.env.Susername!
+const password = process.env.password!
+
+dotenv.config({path:`test-data/${appClient}.env`,override: true})
+
+const clientID = process.env.client_id!
+const clientSecret = process.env.client_secret!
+
 let tokenValue:any, tokenType:string , systemId:any
 
 test.describe.serial("Execute test in serial mode",async() =>{
 
 test("To create barear token", async({request}) =>{
+
+    console.log(username,password,clientID,clientSecret);
+    
 
     let resBody = await request.post('https://dev400114.service-now.com/oauth_token.do',{
         headers:{
@@ -14,10 +36,11 @@ test("To create barear token", async({request}) =>{
         form:{
 
         "grant_type":"password",
-        "client_id":"136ca5ad46e549ef8801da4c22cede5a",
-        "client_secret":"aeyN}+wn`aevIaHJ]9(5r4y0fy,mu5jc",
-        "username":"admin",
-        "password":"Qf=Nj6$ja1FE"
+            //Update the client id and client secret before executing
+        "client_id":clientID,
+        "client_secret":clientSecret,
+        "username":username,
+        "password":password
 
         }
     })  
