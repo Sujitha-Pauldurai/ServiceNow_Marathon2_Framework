@@ -1,11 +1,17 @@
 import { LoginPage } from "../pages/login";
 // Import the custom test fixture that provides reusable page objects.
 import {test} from "../helper/customeFixture"
+import dotenv from "dotenv"
 
 // Import login credentials and app_URL from the test data file.
 import users from "../test-data/users.json" // users file is not added in Git since it has confidential data
 import appUrl from "../test-data/appUrl.json"
 import item from "../test-data/items.json"
+
+let user= process.env.user || 'users' 
+
+//config the environment file Details 
+dotenv.config({path:`test-data/${user}.env`})
 
 // Define a test scenario for ordering a mobile through ServiceNow.
 test("Service Now : Ordering a mobile", async({login,home,serviceNow}) =>{
@@ -17,7 +23,7 @@ test("Service Now : Ordering a mobile", async({login,home,serviceNow}) =>{
     await login.loadUrl(appUrl.url);
 
     // Log in using the credentials from the test data.
-    await login.login(users.username, users.password)
+    await login.login(process.env.username!, process.env.password!)
 
     // Open the Service Catalog using the specified search text.
     await home.openServiceCatalog("service catalog")
