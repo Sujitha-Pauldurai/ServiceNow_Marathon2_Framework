@@ -6,3 +6,6 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+test-data/apiClient.json
+test-data/users.env
+test-data/appClient.env
