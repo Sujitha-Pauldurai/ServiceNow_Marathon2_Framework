@@ -26,7 +26,7 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test --workers=2
       env:
         Susername: ${{ secrets.SUSERNAME }}
         password: ${{ secrets.PASSWORD }}
