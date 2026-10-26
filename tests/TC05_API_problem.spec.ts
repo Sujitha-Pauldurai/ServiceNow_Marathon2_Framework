@@ -7,48 +7,59 @@ import { expect } from "@playwright/test"
 
 test("Problem module",async({login,fileReader,apiRequest,home}) =>{
 
-    
-    //const user = await fileReader.readFromFile("users")
-    const username =   fileReader.readData("users", "Susername")
-    //user?.Susername!
-    const password =  fileReader.readData("users", "password")
-
-    //const client = await fileReader.readFromFile("appClient")
-    const clientID =  fileReader.readData("appClient", "client_id")
-    const clientSecret =fileReader.readData("appClient", "client_secret")
-
-    const access_token = await apiRequest.generateAccessToken(username,password,clientID,clientSecret)
-
-    console.log(access_token.tokenType, access_token.tokenValue);
-
+    let username: string;
+    let password: string;
+    let clientID: string;
+    let clientSecret: string;
     const instanceUrl = appUrl.APIinstanceUrl
     const table = "problem"
+    let access_token:any
+    let newRecord:any
+    await test.step("Read secret data from Environment files",async() =>{
+        //const user = await fileReader.readFromFile("users")
+        username =   fileReader.readData("users", "Susername")
+        //user?.Susername!
+        password =  fileReader.readData("users", "password")
 
-    const newRecord = await apiRequest.POSTRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue,problemData.new)
+        //const client = await fileReader.readFromFile("appClient")
+        clientID =  fileReader.readData("appClient", "client_id")
+        clientSecret =fileReader.readData("appClient", "client_secret")
+    })
 
-    const getDetails = await apiRequest.getRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue, newRecord.sysid)
-    console.log(getDetails)
+    await test.step("API methods GET Access Token/ POST,GET and UPDATE Problem",async()=>{
+        access_token = await apiRequest.generateAccessToken(username,password,clientID,clientSecret)
 
-    const updatedDetail = await apiRequest.patchRequest(table, instanceUrl,  access_token.tokenType, access_token.tokenValue, newRecord.sysid,problemData.update)
-    if(updatedDetail.status === 200){
-        console.log("Value updated successfully");
+        newRecord = await apiRequest.POSTRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue,problemData.new)
+
+        const getDetails = await apiRequest.getRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue, newRecord.sysid)
+        console.log(getDetails)
+
+        const updatedDetail = await apiRequest.patchRequest(table, instanceUrl,  access_token.tokenType, access_token.tokenValue, newRecord.sysid,problemData.update)
+        if(updatedDetail.status === 200){
+            console.log("Value updated successfully");
+            
+        } 
+
+    })
+
+    await test.step("Verify the created problem in UI",async()=>{
+
+        // UI side validation 
+        await login.loadApplication(appUrl.url);
+
+        const userResult = await fileReader.readFromFile("users")
+
+        await login.login(userResult?.Susername!,userResult?.password!)
+
+        //await home.searchItem('PRB0000051')
         
-    } 
+        await home.searchItem(newRecord.itemid)
+    })
 
-    // UI side validation 
-    await login.loadApplication(appUrl.url);
+    await test.step("Delete the created problem from API",async()=>{
 
-    const userResult = await fileReader.readFromFile("users")
-
-    await login.login(userResult?.Susername!,userResult?.password!)
-
-    //await home.searchItem('PRB0000051')
-    
-    await home.searchItem(newRecord.itemid)
-
-    //Delete the created record
-
-    await apiRequest.deleteRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue, newRecord.sysid)
-
+        //Delete the created record
+        await apiRequest.deleteRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue, newRecord.sysid)
+    })
 
 })
