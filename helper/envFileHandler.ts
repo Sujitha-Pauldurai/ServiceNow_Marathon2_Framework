@@ -21,8 +21,6 @@ export class envFileMethods{
         const userName = process.env[value] || file
 
         const result = dotenv.config({path:`test-data/${file}.env`})
-
-        console.log(`${value} is ${process.env[value]}`);
         
         return process.env[value]!
 
