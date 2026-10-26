@@ -1,12 +1,13 @@
 import { LoginPage } from "../pages/login";
 // Import the custom test fixture that provides reusable page objects.
 import {test} from "../helper/customeFixture"
-import dotenv from "dotenv"
+
 
 // Import login credentials and app_URL from the test data file.
 //import users from "../test-data/users.json" // users file is not added in Git since it has confidential data
 import appUrl from "../test-data/appUrl.json"
 import item from "../test-data/items.json"
+import dotenv from "dotenv"
 
 let user= 'users' 
 

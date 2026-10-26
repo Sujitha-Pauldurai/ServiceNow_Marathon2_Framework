@@ -5,6 +5,8 @@ node_modules/
 playwright-report/
 test-results/
 blob-report/
+test-data/appClient.env
+test-data/users.env
 
 # Environment variables
 .env

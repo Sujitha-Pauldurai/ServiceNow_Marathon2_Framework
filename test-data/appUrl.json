@@ -1,4 +1,6 @@
 {
-    "url": "https://dev400114.service-now.com/now/nav/ui/classic/params/target/ui_page.do%3Fsys_id%3D886be3af8373431016c5b755eeaad323"
+    "url": "https://dev400114.service-now.com/",
+    "APIinstanceUrl" : "https://dev400114.service-now.com/api/now/table/"
+
 
 }

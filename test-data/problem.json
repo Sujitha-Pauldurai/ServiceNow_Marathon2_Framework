@@ -1,0 +1,17 @@
+{
+    "new":{
+        "short_description": "Problem in Onboarding",
+        "description": "Onboarding issue of new customer",
+        "comments": "Updated via Playwright API request",
+        "work_notes": "Checked mail server logs",
+        "subcategory": "Problem",
+        "impact": "3",
+        "urgency": "1"
+    },
+    "update":{
+        "short_description": "update Onboarding issue - PW API",
+        "description": "Onboarding of new customer is still pening - PW API",
+        "comments": "Updated via PW - PATCH"
+
+    }
+}

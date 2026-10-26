@@ -1,4 +1,9 @@
-import {test,expect, request} from "@playwright/test"
+import {expect, request} from "@playwright/test"
+import appUrl from "../test-data/appUrl.json"
+
+// Import the custom test fixture that provides reusable page objects.
+import {test} from "../helper/customeFixture"
+
 import dotenv from "dotenv"
 
 let user= process.env.user || 'users' 
@@ -137,6 +142,21 @@ test("Update a Problem Details",async({request})=>{
 
 })
 
+test.only("Verfiy the created problem in UI",async({login})=>{
+    // Mark the test as slow to allow additional execution time since the application takes time to load every page
+    test.slow()
+
+    // Navigate to the application URL.
+    await login.loadApplication(appUrl.url);
+
+    console.log(process.env.Susername!, process.env.password!);
+    
+
+    // Log in using the credentials from the test data.
+    await login.login(process.env.Susername!, process.env.password!)
+    
+})
+
 test("Delete the  Problem",async({request})=>{
     let resBody = await request.delete(`https://dev400114.service-now.com/api/now/table/problem/${systemId}`,{
         headers:{
@@ -150,6 +170,10 @@ test("Delete the  Problem",async({request})=>{
     expect(resBody.statusText()).toBe('No Content')
     console.log(resBody.statusText())
 })
+
+
+
+
 
 })
 

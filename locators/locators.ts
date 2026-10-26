@@ -51,6 +51,14 @@ export const Locator={
 
 
     },
+    instacePage:{
+        search: '#sncwsgs-typeahead-input',
+        searchItem : (searchText : string) => `[data-tooltip="${searchText}"]`,
+        searchResultDIv : '#sncwsgs-typeahead-sections li',
+        itemNumber : '[id="problem.number"]'
+        
+
+    }
 
 
 

@@ -20,22 +20,22 @@ export default class ElementHandler{
      * @param url - The URL of the application to open.
      */
     async loadApplication(url:string){
-
-        try{
             await this.page.goto(url)
-            console.log("logged in successfully")
-            }
-        catch(error){
-        console.log("login was not successfull")
-        throw new Error("login is failed")
-            
-        }
+  
+         
+        
       }
 
     //Method to wait until the page's DOM content is fully loaded.
     async waitUntilPageLoad(){
         await this.page.waitForLoadState("domcontentloaded")
         
+    }
+
+    async waitUntilBodyLoad(){
+        await this.page.locator('body').waitFor({ state: 'attached', timeout: 15000 });
+      
+        //await this.page.locator('#app-root, .main-layout').first().waitFor({ state: 'attached', timeout: 15000 });
     }
     
     /**
@@ -89,11 +89,37 @@ export default class ElementHandler{
 
     }
         // Verify that the element becomes visible within 90 seconds.
-        await expect(element).toBeVisible({timeout:90000})
+        await element.waitFor({state : 'visible'})
 
         // Click the element after visibility is confirmed.
         await element.click()
         
+    }
+
+    /**
+    * Waits for a specified duration based on the wait type provided.
+    * 
+    * @param {'minWait' | 'mediumWait' | 'maxWait'} waitType - The type of wait duration ('minWait', 'mediumWait', or 'maxWait').
+    */
+    async wait(waitType: 'minWait' | 'mediumWait' | 'maxWait') {
+        try {
+            switch (waitType) {
+                case 'minWait':
+                    await this.page.waitForTimeout(3000);
+                    break;
+                case 'mediumWait':
+                    await this.page.waitForTimeout(5000);
+                    break;
+                case 'maxWait':
+                    await this.page.waitForTimeout(10000);
+                    break;
+                default:
+                    console.log("Invalid wait type provided.");
+                    throw new Error(`Invalid wait type: ${waitType}`);
+            }
+        } catch (error) {
+            console.error("Error during wait:", error);
+        }
     }
 
 
@@ -123,7 +149,6 @@ export default class ElementHandler{
         else{
             element = await this.findElement(locator)
         }
-        console.log(await element.getAttribute('name'));
         
         // Fill the input field with the specified text, replacing any existing value.
          await element.fill(value)
@@ -160,8 +185,7 @@ export default class ElementHandler{
 
             // Extract the method name by removing the 'getBy' prefix.
             method = locator.replace("getBy", "")
-            console.log(method);
-            console.log("locator has getBy",locator,locMethod,name);
+           
             switch(method){
                 case "Role":
                     // Locate the element by its ARIA role and accessible name.
