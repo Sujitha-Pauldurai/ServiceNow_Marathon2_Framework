@@ -34,7 +34,11 @@ export default defineConfig({
     baseURL: "https://dev400114.service-now.com/now/nav/ui/classic/params/target/ui_page.do%3Fsys_id%3D886be3af8373431016c5b755eeaad323",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+     launchOptions: {
+    args: ['--start-maximized'],
+  },
+    viewport: null,
+    trace: 'retain-on-failure',
     screenshot:'on',
     headless:true,
     actionTimeout:80000,
