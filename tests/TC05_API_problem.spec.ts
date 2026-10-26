@@ -8,13 +8,14 @@ import { expect } from "@playwright/test"
 test("Problem module",async({login,fileReader,apiRequest,home}) =>{
 
     
-    const user = await fileReader.readFromFile("users")
-    const username = user?.Susername!
-    const password = user?.password!
+    //const user = await fileReader.readFromFile("users")
+    const username =   fileReader.readData("users", "Susername")
+    //user?.Susername!
+    const password =  fileReader.readData("users", "password")
 
-    const client = await fileReader.readFromFile("appClient")
-    const clientID = client?.client_id!
-    const clientSecret =client?.client_secret!
+    //const client = await fileReader.readFromFile("appClient")
+    const clientID =  fileReader.readData("appClient", "client_id")
+    const clientSecret =fileReader.readData("appClient", "client_secret")
 
     const access_token = await apiRequest.generateAccessToken(username,password,clientID,clientSecret)
 
@@ -32,7 +33,7 @@ test("Problem module",async({login,fileReader,apiRequest,home}) =>{
     if(updatedDetail.status === 200){
         console.log("Value updated successfully");
         
-    }
+    } 
 
     // UI side validation 
     await login.loadApplication(appUrl.url);
@@ -41,6 +42,8 @@ test("Problem module",async({login,fileReader,apiRequest,home}) =>{
 
     await login.login(userResult?.Susername!,userResult?.password!)
 
+    //await home.searchItem('PRB0000051')
+    
     await home.searchItem(newRecord.itemid)
 
     //Delete the created record

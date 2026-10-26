@@ -142,7 +142,7 @@ test("Update a Problem Details",async({request})=>{
 
 })
 
-test.only("Verfiy the created problem in UI",async({login})=>{
+test("Verfiy the created problem in UI",async({login})=>{
     // Mark the test as slow to allow additional execution time since the application takes time to load every page
     test.slow()
 

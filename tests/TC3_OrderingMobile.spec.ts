@@ -21,7 +21,7 @@ test("Service Now : Ordering a mobile", async({login,home,serviceNow}) =>{
     test.slow()
 
     // Navigate to the application URL.
-    await login.loadUrl(appUrl.url);
+    await login.loadApplication(appUrl.url);
 
     console.log(process.env.Susername!, process.env.password!);
     

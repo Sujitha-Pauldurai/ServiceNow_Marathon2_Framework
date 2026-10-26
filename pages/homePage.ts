@@ -28,13 +28,14 @@ export class HomePage extends ElementHandler{
 
     async searchItem(searchText:string){
         const searchBox = await this.findElement(Locator.instacePage.search)
-        await searchBox.focus()
+        
         await searchBox.waitFor({state:'visible'})
+        await searchBox.focus()
         await searchBox.click()
+        await (await this.findElement(Locator.instacePage.searchResultDIv)).first().waitFor({state:'visible'})
         //await searchBox.focus()
         await searchBox.fill(searchText)
-       // await searchBox.press('Enter')
-        //await this.click(Locator.instacePage.searchItem(searchText))
+       
         const searchResultDiv = await this.findElement(Locator.instacePage.searchResultDIv)
         await searchResultDiv.waitFor({state:"visible"})
         if(searchResultDiv.filter({hasText : `${searchText}`})){
