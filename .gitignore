@@ -5,8 +5,9 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/git rm --cached playwright/.auth/ test-data/apiClient.json test-data/users.env test-data/appClient.env
 /playwright/.auth/
-test-data/apiClient.json
-test-data/users.env
-test-data/appClient.env
+/test-data/apiClient.json
+/test-data/users.env
+/test-data/appClient.env
 

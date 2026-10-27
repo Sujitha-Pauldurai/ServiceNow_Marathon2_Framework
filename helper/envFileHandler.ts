@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 export class envFileMethods{
 
 
-    async readFromFile(file:string){
+    readFromFile(file:string){
 
         //const user = process.env.user || 'users';
        // const appClient = process.env.client || 'appClient';

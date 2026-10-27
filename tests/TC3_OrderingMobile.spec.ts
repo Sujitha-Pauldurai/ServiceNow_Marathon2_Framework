@@ -1,21 +1,14 @@
-import { LoginPage } from "../pages/login";
+
 // Import the custom test fixture that provides reusable page objects.
 import {test} from "../helper/customeFixture"
 
 
-// Import login credentials and app_URL from the test data file.
-//import users from "../test-data/users.json" // users file is not added in Git since it has confidential data
 import appUrl from "../test-data/appUrl.json"
 import item from "../test-data/items.json"
-import dotenv from "dotenv"
 
-let user= 'users' 
-
-//config the environment file Details 
-dotenv.config({path:`test-data/${user}.env`})
 
 // Define a test scenario for ordering a mobile through ServiceNow.
-test("Service Now : Ordering a mobile", async({login,home,serviceNow}) =>{
+test("Service Now : Ordering a mobile", async({login,home,serviceNow,fileReader}) =>{
 
     // Mark the test as slow to allow additional execution time since the application takes time to load every page
     test.slow()
@@ -23,11 +16,12 @@ test("Service Now : Ordering a mobile", async({login,home,serviceNow}) =>{
     // Navigate to the application URL.
     await login.loadApplication(appUrl.url);
 
-    console.log(process.env.Susername!, process.env.password!);
+    const username =   fileReader.readData("users", "Susername")
+        //user?.Susername!
+    const password =  fileReader.readData("users", "password")
     
-
     // Log in using the credentials from the test data.
-    await login.login(process.env.Susername!, process.env.password!)
+    await login.login(username, password)
 
     // Open the Service Catalog using the specified search text.
     await home.openServiceCatalog("service catalog")

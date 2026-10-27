@@ -1,161 +1,61 @@
-import {test,expect, request} from "@playwright/test"
+import {expect, request} from "@playwright/test"
 
-import dotenv from "dotenv"
+import appUrl from "../test-data/appUrl.json"
+import {test} from "../helper/customeFixture"
+import changeRequest from "../test-data/changeRequest.json"
 
 
+let username:string
+let password:string
 
-let user= process.env.user || 'users' 
+let clientID:string
+let clientSecret:any
+let access_token:any
+let newRecord:any
+let table = "change_request"
+const instanceUrl = appUrl.APIinstanceUrl
 
-let appClient = process.env.client || 'appClient'
-
-//config the environment file Details 
-dotenv.config({path:`test-data/${user}.env`,override: true})
-
-const username = process.env.Susername!
-const password = process.env.password!
-
-dotenv.config({path:`test-data/${appClient}.env`,override: true})
-
-const clientID = process.env.client_id!
-const clientSecret = process.env.client_secret!
 
 let tokenValue:any, tokenType:string , systemId:any
 
-test.describe.serial("Execute test in serial mode",async() =>{
+test("Create,Update and Delete Change request from API",async({apiRequest,fileReader})=>{
 
-test("To create barear token", async({request}) =>{
+    username =   fileReader.readData("users", "Susername")
+    password =  fileReader.readData("users", "password")
+    clientID =  fileReader.readData("appClient", "client_id")
+    clientSecret = fileReader.readData("appClient", "client_secret")
 
-    console.log(username,password,clientID,clientSecret);
-    
+    await test.step("API methods to GET Access Token",async()=>{
 
-    let resBody = await request.post('https://dev400114.service-now.com/oauth_token.do',{
-        headers:{
-        "Content-Type" :"application/x-www-form-urlencoded"
+        console.log("------------Generate Access Token--------------");
+        
+        access_token = await apiRequest.generateAccessToken(username,password,clientID,clientSecret)
 
-        },
-        form:{
+    })
+    await test.step("API methods Create and View Change request",async()=>{
 
-        "grant_type":"password",
-            //Update the client id and client secret before executing
-        "client_id":clientID,
-        "client_secret":clientSecret,
-        "username":username,
-        "password":password
+        console.log("------------Create chnage Request--------------");
 
-        }
-    })  
-    
-    //deserialization-> json to obj
-    let tokenRes=await resBody.json()
-    console.log(tokenRes)
+        newRecord = await apiRequest.POSTRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue,changeRequest.new)
 
-    expect(resBody.status()).toBe(200)      
-    console.log(resBody.status());
+        const getDetails = await apiRequest.getRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue, newRecord.sysid)
+        console.log(getDetails)
 
-    expect(resBody.statusText()).toBe("OK")
-    console.log(resBody.statusText());
-
-    tokenType=tokenRes.token_type
-    console.log(tokenType);
-
-    tokenValue = tokenRes.access_token
-    console.log(tokenValue);
-    
-    
-})
-
-test("Create Change Request",async({request}) => {
-
-    console.log(`${tokenType} ${tokenValue}`);
-    
-
-    let resBody =await request.post('https://dev400114.service-now.com/api/now/table/change_request',{
-        headers:{
-            "Content-Type" : "application/json",
-            "Authorization" : `${tokenType} ${tokenValue}`
-        },
-        data:{
-            "short_description": "Laptop not working",
-            "description": "Laptop change Request created from API Playwright",
-            "comments": "Updated via POSTMAN",
-            "work_notes": "Checked mail server logs",
-            "subcategory": "Change request",
-            "impact": "2",
-            "urgency": "2"
-        }
     })
 
-    let response = await resBody.json()
-    console.log("New Change Request Details: \n",response);
+    await test.step("API methods to UPDATE change Request",async()=>{
+        console.log("------------Update change request--------------");
+        const updatedDetail = await apiRequest.patchRequest(table, instanceUrl,  access_token.tokenType, access_token.tokenValue, newRecord.sysid,changeRequest.update)
 
-expect(resBody.status()).toBe(201)
-console.log(resBody.status())
 
-expect(resBody.statusText()).toBe('Created')
-console.log(resBody.statusText())
-
-systemId=response.result.sys_id
-console.log(systemId);
-    
-
-})
-
-test("Get the created Change request details",async({request})=>{
-
-    let resBody =await request.get(`https://dev400114.service-now.com/api/now/table/change_request/${systemId}`,{
-        headers:{
-            "Content-Type" : "application/json",
-            "Authorization" : `${tokenType} ${tokenValue}`
-        }
     })
 
-     let response = await resBody.json()
-    console.log("Change Request Details: \n",response);
-
-    expect(resBody.status()).toBe(200)
-    console.log(resBody.status())
-
-    expect(resBody.statusText()).toBe('OK')
-    console.log(resBody.statusText())
-
-})
-
-test("Update change request Details",async({request})=>{
-    let resBody = await request.patch(`https://dev400114.service-now.com/api/now/table/change_request/${systemId}`,{
-        headers:{
-            "Content-Type" : "application/json",
-            "Authorization" : `${tokenType} ${tokenValue}`
-        },
-        data:{
-            "short_description": "Laptop not working - PW API",
-            "description": "Laptop change Request  Updated from PW API",
-            "comments": "Updated via PW - PATCH"
-        }
+    await test.step("API  Method to delete the change request",async()=>{
+        console.log("------------Delete change request--------------");
+        //Delete the created record
+        await apiRequest.deleteRequest(table, instanceUrl, access_token.tokenType, access_token.tokenValue, newRecord.sysid)
     })
-    let response = await resBody.json()
-    console.log("Change Request Details: \n",response);
 
-    expect(resBody.status()).toBe(200)
-    console.log(resBody.status())
-
-    expect(resBody.statusText()).toBe('OK')
-    console.log(resBody.statusText())
-
-})
-
-test("Delete the change request",async({request})=>{
-    let resBody = await request.delete(`https://dev400114.service-now.com/api/now/table/change_request/${systemId}`,{
-        headers:{
-            "Content-Type" : "application/json",
-            "Authorization" : `${tokenType} ${tokenValue}`
-        }
-    })
-    expect(resBody.status()).toBe(204)
-    console.log(resBody.status())
-
-    expect(resBody.statusText()).toBe('No Content')
-    console.log(resBody.statusText())
-})
 
 })
 

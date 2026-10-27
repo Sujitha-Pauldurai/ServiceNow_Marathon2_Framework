@@ -1,0 +1,16 @@
+{
+    "new":{
+            "short_description": "Laptop not working",
+            "description": "Laptop change Request created from API Playwright",
+            "comments": "Updated via POSTMAN",
+            "work_notes": "Checked mail server logs",
+            "subcategory": "Change request",
+            "impact": "2",
+            "urgency": "2"
+        },
+    "update":{
+            "short_description": "Laptop not working - PW API",
+            "description": "Laptop change Request  Updated from PW API",
+            "comments": "Updated via PW - PATCH"
+        }
+}

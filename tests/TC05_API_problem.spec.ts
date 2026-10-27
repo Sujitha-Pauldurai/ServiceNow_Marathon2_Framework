@@ -47,9 +47,7 @@ test("Problem module",async({login,fileReader,apiRequest,home}) =>{
         // UI side validation 
         await login.loadApplication(appUrl.url);
 
-        const userResult = await fileReader.readFromFile("users")
-
-        await login.login(userResult?.Susername!,userResult?.password!)
+        await login.login(username,password)
 
         //await home.searchItem('PRB0000051')
         
