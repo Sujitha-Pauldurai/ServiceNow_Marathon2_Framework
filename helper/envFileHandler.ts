@@ -18,11 +18,19 @@ export class envFileMethods{
 
     readData(file:string,value:string){
 
-        const userName = process.env[value] || file
+        if (!process.env[value]) {
+            const result = dotenv.config({path: `test-data/${file}.env`});
 
-        const result = dotenv.config({path:`test-data/${file}.env`})
-        
-        return process.env[value]!
+            if (result.error) throw result.error;
+        }
+
+        const data = process.env[value];
+
+        if (!data) {
+            throw new Error(`Missing environment variable: ${value}`);
+        }
+
+        return data;
 
     }
 }
