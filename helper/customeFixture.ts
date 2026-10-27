@@ -5,6 +5,7 @@ import { HomePage } from "../pages/homePage"
 import { ServiceNow } from "../pages/serviceNow"
 import { APIMethods } from "./APIHandler"
 import { envFileMethods } from "./envFileHandler"
+import { JIRAHandler } from "../helper/JiraAPIHandler"
 
 // Define the custom fixture types and their corresponding page objects.
 type myFixture={
@@ -13,6 +14,7 @@ type myFixture={
     serviceNow : ServiceNow
     apiRequest : APIMethods
     fileReader : envFileMethods
+    JIRAMethods : JIRAHandler
 
 }
 
@@ -43,6 +45,10 @@ export const test=base.extend<myFixture>({
     fileReader:async({},use) =>{
         let envFile= new envFileMethods()
         await use(envFile)
+    },
+    JIRAMethods:async({},use) =>{
+        let jira= new JIRAHandler()
+        await use(jira)
     }
 
 

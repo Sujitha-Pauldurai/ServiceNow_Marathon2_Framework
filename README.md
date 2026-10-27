@@ -98,6 +98,14 @@ ServiceNow_Marathon2_Framework/
 - Exercise Problem record API operations.
 - Validate responses and clean up test data.
 
+### Jira API Integration
+
+- Developed a reusable `JIRAHandler` class using Axios to perform Jira REST API operations.
+- Implemented **POST, GET, PUT, and DELETE** methods to create, retrieve, update, and delete Jira issues.
+- Added response status and data assertions to validate API operations.
+- Used configurable parameters for Jira URL, authentication credentials, project key, issue type, summary, and description.
+- Integrated environment variable handling using a reusable `envFileMethods` class to manage configuration securely.
+
 ## Getting Started
 
 ### Prerequisites
